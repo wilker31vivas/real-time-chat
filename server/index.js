@@ -38,7 +38,7 @@ io.on("connection", async (socket) => {
     console.log("a user has disconnected!");
   });
 
-  const MAX_MSG_LENGTH = 3;
+  const MAX_MSG_LENGTH = 50;
   const isValidMessage = (msg) =>
     msg && msg.trim().length > 0 && msg.length <= MAX_MSG_LENGTH;
 

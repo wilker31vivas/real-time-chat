@@ -16,11 +16,13 @@
   "license": "ISC",
   "dependencies": {
     "@libsql/client": "^0.17.3",
+    "@tailwindcss/vite": "^4.2.4",
     "dotenv": "^17.4.2",
     "express": "5.2.1",
     "morgan": "1.10.1",
     "socket.io": "4.8.3",
-    "socket.io-client": "^4.8.3"
+    "socket.io-client": "^4.8.3",
+    "tailwindcss": "^4.2.4"
   },
   "config": {
     "port": 3000
