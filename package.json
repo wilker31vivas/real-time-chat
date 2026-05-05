@@ -5,9 +5,11 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "node --watch ./server/index.js",
-    "start": "node ./server/index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "server": "node --watch ./server/index.js",
+    "start": "node ./server/index.js"
   },
   "keywords": [],
   "author": "",
@@ -17,9 +19,16 @@
     "dotenv": "^17.4.2",
     "express": "5.2.1",
     "morgan": "1.10.1",
-    "socket.io": "4.8.3"
+    "socket.io": "4.8.3",
+    "socket.io-client": "^4.8.3"
   },
   "config": {
     "port": 3000
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.0.1",
+    "react": "^19.2.5",
+    "react-dom": "^19.2.5",
+    "vite": "^8.0.10"
   }
 }

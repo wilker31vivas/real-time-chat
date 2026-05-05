@@ -15,7 +15,8 @@ const server = createServer(app);
 const io = new Server(server, {
   connectionStateRecovery: {},
 });
-app.use(express.static('public'));
+
+app.use(express.static('dist'));
 
 const db = createClient({
   url: "libsql://mi-base-de-datos-wilker31vivas.aws-us-east-1.turso.io",
@@ -37,7 +38,7 @@ io.on("connection", async (socket) => {
     console.log("a user has disconnected!");
   });
 
-  const MAX_MSG_LENGTH = 2;
+  const MAX_MSG_LENGTH = 3;
   const isValidMessage = (msg) =>
     msg && msg.trim().length > 0 && msg.length <= MAX_MSG_LENGTH;
 
@@ -77,7 +78,7 @@ io.on("connection", async (socket) => {
 app.use(logger("dev"));
 
 app.get("/", (req, res) => {
-  res.sendFile(process.cwd() + "/client/index.html");
+  res.sendFile(process.cwd() + "/dist/index.html");
 });
 
 server.listen(port, () => {
