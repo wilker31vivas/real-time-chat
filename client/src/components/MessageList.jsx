@@ -2,7 +2,7 @@ export default function MessageList({ messages }) {
   return (
     <ul className="flex flex-col gap-2 px-4 py-3 overflow-y-auto">
       {messages.map((message, idx) => (
-        <Message key={idx} msg={message.msg} username={message.user.name} avatar={message.user.avatar} />
+        <Message key={idx} msg={message.msg} username={message.user.username} avatar={message.user.avatar} />
       ))}
     </ul>
   );
