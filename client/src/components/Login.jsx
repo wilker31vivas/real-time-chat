@@ -1,4 +1,16 @@
-export default function Login() {
+import { useState } from 'react'
+
+export default function Login({ setUser }) {
+  const [input, setInput] = useState('')
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    if (input.trim()) {
+      setUser(input)
+      setInput('')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-[#0a0a0f] flex items-center justify-center relative overflow-hidden px-4 font-sans">
 
@@ -26,8 +38,9 @@ export default function Login() {
           Enter your username to continue chatting
         </p>
 
-        <div className="flex flex-col gap-4">
-
+        <form className="flex flex-col gap-4"
+          onSubmit={handleSubmit}
+        >
           <div>
             <label
               htmlFor="username"
@@ -36,6 +49,8 @@ export default function Login() {
               Username
             </label>
             <input
+              onChange={(e) => setInput(e.target.value)}
+              required
               id="username"
               type="text"
               placeholder="e.g. wilker_dev"
@@ -44,12 +59,12 @@ export default function Login() {
           </div>
 
           <button
-            type="button"
+            type="submit"
             className="mt-1 w-full py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-semibold tracking-wide shadow-[0_4px_20px_rgba(99,102,241,0.4)] hover:opacity-90 hover:-translate-y-px active:scale-[0.98] transition-all duration-150 cursor-pointer"
           >
             Sign in →
           </button>
-        </div>
+        </form>
 
       </div>
     </div>

@@ -1,54 +1,55 @@
 import { useState, useEffect, useCallback } from "react";
 import { io } from "socket.io-client";
+import { useAuth } from "./useAuth";
 
 let socket = null;
 
 export function useChat() {
+  const { getUser } = useAuth();
   const [messages, setMessages] = useState([]);
-  const [username, setUsername] = useState("");
   const [isConnected, setIsConnected] = useState(false);
-
-  const getUserName = useCallback(async () => {
-    const stored = localStorage.getItem("username");
-    if (stored) return stored;
-
-    const response = await fetch("https://randomuser.me/api/");
-    const data = await response.json();
-    const randomName = data.results[0].name.first;
-    localStorage.setItem("username", randomName);
-    return randomName;
-  }, []);
+  const [user, setUser] = useState({
+    username: "",
+    avatar: "",
+  });
 
   useEffect(() => {
-    const initSocket = async () => {
-      const name = await getUserName();
-      setUsername(name);
+    const isUserExist = () => !!localStorage.getItem("user");
 
-      socket = io({
-        auth: { username: name, serverOffset: 0 },
-      });
+    if (isUserExist()) {
+      const initSocket = async () => {
+        const userWithAvatar = getUser();
+        setUser(user);
 
-      socket.on("connect", () => {
-        setIsConnected(true);
-        console.log("Connected");
-      });
+        socket = io({
+          auth: {
+            username: userWithAvatar.username,
+            avatar: userWithAvatar.avatar,
+            serverOffset: 0,
+          },
+        });
 
-      socket.on("chat message", (msg, serverOffset, user) => {
-        setMessages((prev) => [...prev, { msg, user }]);
-        socket.auth.serverOffset = serverOffset;
-      });
+        socket.on("connect", () => {
+          setIsConnected(true);
+          console.log("Connected");
+        });
 
-      socket.on("error", (error) => {
-        console.error("Socket error:", error);
-      });
+        socket.on("chat message", (msg, serverOffset, user) => {
+          setMessages((prev) => [...prev, { msg, user }]);
+          socket.auth.serverOffset = serverOffset;
+        });
 
-      return () => {
-        socket?.disconnect();
+        socket.on("error", (error) => {
+          console.error("Socket error:", error);
+        });
+
+        return () => {
+          socket?.disconnect();
+        };
       };
-    };
-
-    initSocket();
-  }, [getUserName]);
+      initSocket();
+    }
+  }, [getUser]);
 
   const sendMessage = useCallback((message) => {
     if (socket && message.trim()) {
@@ -56,5 +57,5 @@ export function useChat() {
     }
   }, []);
 
-  return { messages, username, isConnected, sendMessage };
+  return { messages, user, isConnected, sendMessage };
 }

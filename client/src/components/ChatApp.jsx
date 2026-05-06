@@ -1,10 +1,7 @@
-import { useChat } from '../hooks/useChat'
 import MessageList from './MessageList'
 import ChatForm from './ChatForm'
 
-export default function ChatApp() {
-  const { messages, sendMessage } = useChat()
-
+export default function ChatApp({ messages, sendMessage }) {
   return (
     <section className="flex flex-col h-screen bg-[#0a0a0f] relative overflow-hidden">
 
@@ -20,6 +17,9 @@ export default function ChatApp() {
         <ChatForm onSendMessage={sendMessage} />
       </div>
 
+      <button onClick={()=>{
+        localStorage.removeItem("user")
+      }} className='text-white cursor-pointer p-4 flex'>Elimninar user</button>
     </section>
   )
 }
