@@ -14,12 +14,13 @@ export function useChat() {
   });
 
   useEffect(() => {
-    const isUserExist = () => !!localStorage.getItem("user");
-
-    if (isUserExist()) {
+    const userFromStorage = localStorage.getItem("user");
+    
+    if (!userFromStorage) return;
+    
       const initSocket = async () => {
         const userWithAvatar = getUser();
-        setUser(user);
+        setUser(userWithAvatar);
 
         socket = io({
           auth: {
@@ -48,8 +49,8 @@ export function useChat() {
         };
       };
       initSocket();
-    }
-  }, [getUser]);
+    
+  }, [getUser, user]);
 
   const sendMessage = useCallback((message) => {
     if (socket && message.trim()) {
