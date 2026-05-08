@@ -19,7 +19,7 @@ export default function ChatApp({ messages, sendMessage }) {
 
       <button onClick={()=>{
         localStorage.removeItem("user")
-      }} className='text-white cursor-pointer p-4 flex'>Elimninar user</button>
+      }} className='text-white cursor-pointer p-4 flex'>Eliminar user</button>
     </section>
   )
 }

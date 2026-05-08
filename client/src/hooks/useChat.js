@@ -1,62 +1,51 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { io } from "socket.io-client";
 import { useAuth } from "./useAuth";
 
-let socket = null;
-
-export function useChat() {
-  const { getUser } = useAuth();
+export function useChat(user) {
   const [messages, setMessages] = useState([]);
+  const [error, setError] = useState(null);
   const [isConnected, setIsConnected] = useState(false);
-  const [user, setUser] = useState({
-    username: "",
-    avatar: "",
-  });
+  const socketRef = useRef(null);
 
   useEffect(() => {
-    const userFromStorage = localStorage.getItem("user");
-    
-    if (!userFromStorage) return;
-    
-      const initSocket = async () => {
-        const userWithAvatar = getUser();
-        setUser(userWithAvatar);
+    if (!user) return;
+    let socket;
 
-        socket = io({
-          auth: {
-            username: userWithAvatar.username,
-            avatar: userWithAvatar.avatar,
-            serverOffset: 0,
-          },
-        });
+    const initSocket = async () => {
+      socket = io({
+        auth: {
+          username: user.username,
+          avatar: user.avatar,
+          serverOffset: 0,
+        },
+      });
 
-        socket.on("connect", () => {
-          setIsConnected(true);
-          console.log("Connected");
-        });
+      socketRef.current = socket;
 
-        socket.on("chat message", (msg, serverOffset, user) => {
-          setMessages((prev) => [...prev, { msg, user }]);
-          socket.auth.serverOffset = serverOffset;
-        });
+      socket.on("connect", () => setIsConnected(true));
+      socket.on("disconnect", () => setIsConnected(false));
 
-        socket.on("error", (error) => {
-          console.error("Socket error:", error);
-        });
+      socket.on("chat message", (msg, serverOffset, username, avatar) => {
+        setMessages((prev) => [...prev, { msg, username, avatar }]);
+        socket.auth.serverOffset = serverOffset;
+      });
 
-        return () => {
-          socket?.disconnect();
-        };
-      };
-      initSocket();
-    
-  }, [getUser, user]);
+      socket.on("error", (msg) => setError(msg));
+    };
+
+    initSocket();
+
+    return () => {
+      socket?.disconnect();
+    };
+  }, [user]);
 
   const sendMessage = useCallback((message) => {
-    if (socket && message.trim()) {
-      socket.emit("chat message", message);
+    if (socketRef.current && message.trim()) {
+      socketRef.current.emit("chat message", message);
     }
   }, []);
 
-  return { messages, user, isConnected, sendMessage };
+  return { messages, error, isConnected, sendMessage };
 }

@@ -1,13 +1,13 @@
 import { useState } from 'react'
 
-export default function Login({ setUser }) {
-  const [input, setInput] = useState('')
+export default function Login({ onLogin }) {
+  const [name, setName] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    if (input.trim()) {
-      setUser(input)
-      setInput('')
+    if (name.trim()) {
+      onLogin(name)
+      setName('')
     }
   }
 
@@ -49,8 +49,9 @@ export default function Login({ setUser }) {
               Username
             </label>
             <input
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               required
+              value={name}
               id="username"
               type="text"
               placeholder="e.g. wilker_dev"

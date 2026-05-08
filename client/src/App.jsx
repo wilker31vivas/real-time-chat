@@ -5,19 +5,12 @@ import { useChat } from './hooks/useChat'
 import { useState } from 'react'
 
 export default function App() {
-  const { messages, sendMessage } = useChat()
-  const { setUser } = useAuth()
+  const { user, setUser } = useAuth()       // 👈 única instancia de useAuth
+  const { messages, sendMessage } = useChat(user)
 
-  const [isUserExist, setIsUserExist] = useState(() => !!localStorage.getItem("user"));
-
-  const handleLogin = async (name) => {
-    await setUser(name);
-    setIsUserExist(true);
+  if (!user) {
+    return <Login onLogin={setUser} />;
   }
 
-  return (
-    <>
-      {isUserExist ? <ChatApp messages={messages} sendMessage={sendMessage} /> : <Login setUser={handleLogin} />}
-    </>
-  )
+  return <ChatApp messages={messages} sendMessage={sendMessage} />
 }

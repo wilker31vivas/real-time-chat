@@ -1,16 +1,28 @@
+import { useState, useCallback, useEffect } from "react";
+
 export function useAuth() {
-  const getUser = () => {
+  const [user, setUserState] = useState(() => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
-  };
+  });
 
-  const setUser = async (name) => {
-    const userWithAvatar = {
+  useEffect(() => {
+    console.log("user", user);
+  }, [user]);
+
+  const setUser = useCallback((name) => {
+    const newUser = {
       username: name,
       avatar: `https://robohash.org/${name}`,
     };
-    localStorage.setItem("user", JSON.stringify(userWithAvatar));
-  };
+    localStorage.setItem("user", JSON.stringify(newUser));
+    setUserState(newUser);
+  }, []);
 
-  return { getUser, setUser };
+  const clearUser = useCallback(() => {
+    localStorage.removeItem("user");
+    setUserState(null);
+  }, []);
+
+  return { user, setUser, clearUser };
 }
