@@ -54,7 +54,6 @@ export default function Login({ onLogin }) {
               value={name}
               id="username"
               type="text"
-              placeholder="e.g. wilker_dev"
               className="w-full px-4 py-3 rounded-xl bg-white/[0.06] border border-white/10 text-white/90 text-sm placeholder:text-white/20 outline-none transition-all duration-200 focus:border-indigo-500/70 focus:ring-2 focus:ring-indigo-500/20"
             />
           </div>

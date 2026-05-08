@@ -6,10 +6,6 @@ export function useAuth() {
     return stored ? JSON.parse(stored) : null;
   });
 
-  useEffect(() => {
-    console.log("user", user);
-  }, [user]);
-
   const setUser = useCallback((name) => {
     const newUser = {
       username: name,

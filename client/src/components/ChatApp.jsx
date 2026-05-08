@@ -12,14 +12,9 @@ export default function ChatApp({ messages, sendMessage }) {
         <MessageList messages={messages} />
       </div>
 
-      {/* Input area */}
       <div className="relative z-10 px-4 py-3 border-t border-white/[0.06] bg-white/[0.02] backdrop-blur-sm shrink-0">
         <ChatForm onSendMessage={sendMessage} />
       </div>
-
-      <button onClick={()=>{
-        localStorage.removeItem("user")
-      }} className='text-white cursor-pointer p-4 flex'>Eliminar user</button>
     </section>
   )
 }
